@@ -2,6 +2,8 @@
 
 django-transactions-tutorial 基本教學 - 了解 transactions 概念 📝
 
+分支 [django_4_postgresql](https://github.com/twtrubiks/django-transactions-tutorial/tree/django_4_postgresql) 有 django 4 以及 pg 的版本.
+
 * [Youtube Tutorial PART 1 - Django 如何連結 MySQL](https://youtu.be/0IKuKk8ubf0)
 * [Youtube Tutorial PART 2 - Transaction 概念簡介](https://youtu.be/P67IfMK4Y5g)
 * [Youtube Tutorial PART 3 - Django 實戰 Transaction - Atomicity](https://youtu.be/aG33kaSmgzI)
@@ -220,6 +222,8 @@ def create_items_no_transaction(**kwargs):
 
 如下圖，你會發現，有四筆資料進資料庫了 ( 而且一筆資料還是錯的 )，
 
+(有些資料庫你會發現只寫進 3 筆而已, 因為第 4 筆開始發生錯誤)
+
 ![alt tag](https://i.imgur.com/dz0uW2E.png)
 
 他也違反了ACID 的原則，應該全部的資料都不能進資料庫，也就是好像什麼事情都沒發生過一樣。
@@ -392,9 +396,9 @@ Returns a queryset that will lock rows until the end of the transaction, generat
 
 主要就是透過 SQL 中的 `SELECT ... FOR UPDATE` 語法將目前的 row 鎖定，必須等他交易結束，
 
-其他的人才可以使用這個 row，這邊也要注意，要看 databases 有沒有支援這個語法，像是 [MySQL](https://www.mysql.com/cn/)
+其他的人才可以使用這個 row，這邊也要注意，要看 databases 有沒有支援這個語法，
 
-以及 [PostgreSQL](https://www.postgresql.org/) 就有支援，[SQLite](https://www.sqlite.org/index.html) 則沒有支援。
+像是 [MySQL](https://www.mysql.com/cn/) 以及 [PostgreSQL](https://www.postgresql.org/) 就有支援，[SQLite](https://www.sqlite.org/index.html) 則沒有支援。
 
 透過這個方法，
 
@@ -469,7 +473,7 @@ def data_consistency():
     return 200
 ```
 
-Optimistic 方法，這邊提供兩種方法給大家，其中一種是增加一個欄位去追蹤目前的變化 ( version 這個欄位 )，
+這邊提供兩種方法給大家，其中一種是增加一個欄位去追蹤目前的變化 ( version 這個欄位 )，
 
 每次都會將 version 帶入查詢條件，並且如果成功更新，就加一 ; 另一種方法是不增加一個欄位，直接將 stock
 
@@ -493,9 +497,13 @@ else:
 
 ### Pessimistic vs Optimistic
 
-如果你的系統同時間會有很高的機率同時修改一筆資料，適合使用 Pessimistic 的方法。
+如果你的系統同時間會有很高的機率同時修改一筆資料，
 
-如果你的系統同時間修改一筆資料的機率非常低或是使用者較少以及大部分都是讀取的操作，適合使用 Optimistic 的方法。
+適合使用 Pessimistic (悲觀) 的方法。
+
+如果你的系統同時間修改一筆資料的機率非常低或是使用者較少以及大部分都是讀取的操作，
+
+適合使用 Optimistic (樂觀) 的方法。
 
 ## 後記
 
@@ -519,6 +527,14 @@ else:
 * [Transaction Isolation - wiki](https://zh.wikipedia.org/wiki/%E4%BA%8B%E5%8B%99%E9%9A%94%E9%9B%A2)
 * [How to manage concurrency in Django models](https://medium.com/@hakibenita/how-to-manage-concurrency-in-django-models-b240fed4ee2)
 * [PESSIMISTIC vs. OPTIMISTIC concurrency control](https://www.ibm.com/support/knowledgecenter/en/SSPK3V_7.0.0/com.ibm.swg.im.soliddb.sql.doc/doc/pessimistic.vs.optimistic.concurrency.control.html)
+
+## Donation
+
+文章都是我自己研究內化後原創，如果有幫助到您，也想鼓勵我的話，歡迎請我喝一杯咖啡:laughing:
+
+![alt tag](https://i.imgur.com/LRct9xa.png)
+
+[贊助者付款](https://payment.opay.tw/Broadcaster/Donate/9E47FDEF85ABE383A0F5FC6A218606F8)
 
 ## License
 
