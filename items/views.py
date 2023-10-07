@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from items.serializers import ItemSerializer
 from items.models import Item, create_items_with_transaction, create_items_no_transaction, \
@@ -12,7 +12,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
 
     # [POST] /api/items/create_no_transaction/
-    @list_route(methods=['POST'])
+    @action(detail=False, methods=['POST'], url_path='create_no_transaction')
     def create_no_transaction(self, request):
         count = request.data.get('count', None)
         result = create_items_no_transaction(count=count)
@@ -23,7 +23,7 @@ class ItemViewSet(viewsets.ModelViewSet):
         return Response(result, status=result_status)
 
     # [POST] /api/items/create_with_transaction/
-    @list_route(methods=['POST'])
+    @action(detail=False, methods=['POST'], url_path='create_with_transaction')
     def create_with_transaction(self, request):
         count = request.data.get('count', None)
         result = create_items_with_transaction(count=count)
@@ -34,13 +34,13 @@ class ItemViewSet(viewsets.ModelViewSet):
         return Response(result, status=result_status)
 
     # [PUT] /api/items/no_consistency/
-    @list_route(methods=['PUT'])
+    @action(detail=False, methods=['PUT'], url_path='no_consistency')
     def no_consistency(self, request):
         result = data_no_consistency()
         return Response(result, status=status.HTTP_200_OK)
 
     # [PUT] /api/items/consistency/
-    @list_route(methods=['PUT'])
+    @action(detail=False, methods=['PUT'], url_path='consistency')
     def consistency(self, request):
         result = data_consistency()
         return Response(result, status=status.HTTP_200_OK)
